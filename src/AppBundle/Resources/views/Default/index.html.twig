@@ -1,0 +1,30 @@
+{% extends 'AppBundle::base.html.twig' %}
+{% block body %}
+    <div class="container">
+        <h1>Stadium</h1>
+        <p id="free">Free seats: {{ totalFreeSeats }}</p>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>Sector</th>
+                <th>Row</th>
+                <th>Seat</th>
+                <th>Booked</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for seat in seats %}
+                <tr>
+                    <td>{{ seat.id }}</td>
+                    <td>{{ seat.row.sector.sectorName }}</td>
+                    <td>{{ seat.row.rowNumber }}</td>
+                    <td>{{ seat.seatNumber }}</td>
+                    {#{% if seat.isBooked %}booked{% else %}free{% endif %}#}
+                    <td><a href="{{ path('homepage', {id: seat.id}) }}"><span id="smile">✔</span></a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

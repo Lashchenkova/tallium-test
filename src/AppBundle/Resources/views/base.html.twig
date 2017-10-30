@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}Stadium{% endblock %}</title>
+    {% stylesheets
+    'bundles/app/css/bootstrap.min.css'
+    'bundles/app/css/main.css'
+    filter='cssrewrite'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<div class="head">
+    <div class="login">
+        <form action="{{ path('login') }}" method="post">
+            <input type="text" id="username" name="_username" placeholder="Email" required/>
+            <input type="password" id="password" name="_password" placeholder="Password" required/>
+            <button type="submit" class="btn btn-primary btn-block btn-large">LOGIN</button><br>
+            <input type="checkbox" id="remember_me" name="_remember_me" />
+            <label for="remember_me">Remember me</label>
+            <a id="forget_password" href="">Forgot your password?</a>
+        </form>
+    </div>
+</div>
+<nav>
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        {% block nav %}{% endblock %}
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ path('homepage') }}">Home</a></li>
+                <li><a href="{{ path('sector', {id: 1}) }}">Sector A</a></li>
+                <li><a href="{{ path('sector', {id: 2}) }}">Sector B</a></li>
+                <li><a href="{{ path('sector', {id: 3}) }}">Sector C</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% block body %}{% endblock %}
+{% javascripts
+'@AppBundle/Resources/public/js/*'
+'@AppBundle/Resources/public/js/bootstrap.min.js' %}
+<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+</body>
+</html>

@@ -1,0 +1,73 @@
+version: '2'
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: ${PROJECT_NAME}-nginx
+    volumes:
+      - ./:/var/www:ro
+      - ./docker/nginx/site.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+    networks:
+      - default
+    restart: always
+  mysql:
+    image: mariadb
+    container_name: ${PROJECT_NAME}-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tallium-test
+    networks:
+      - default
+    volumes:
+      - ./docker/data:/docker-entrypoint-initdb.d
+  phpMyAdmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: ${PROJECT_NAME}-phpMyAdmin
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      VIRTUAL_HOST: 127.0.0.1
+    networks:
+      - default
+    links:
+      - mysql:db
+    depends_on:
+      - "mysql"
+  php:
+    container_name: ${PROJECT_NAME}-php
+    restart: always
+    volumes:
+      - ./:/var/www
+      - composer_cache:/home/docker/.composer/cache
+    build: ./docker/php
+    networks:
+      - default
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      DATABASE_NAME: tallium-test
+      DATABASE_USER: root
+      DATABASE_PASSWORD: root
+      XDEBUG_CONFIG: remote_host=10.254.254.254
+      PHP_IDE_CONFIG: serverName=tallium-test
+    depends_on:
+      - "mysql"
+  socket.io:
+    image: node:alpine
+    container_name: ${PROJECT_NAME}-socket.io-node
+    working_dir: /usr/src/app
+    restart: always
+    networks:
+      - default
+    depends_on:
+      - "php"
+    entrypoint:
+      - "node"
+      - "server.js"
+    volumes:
+      - "./socketio:/usr/src/app"
+
+volumes:
+    composer_cache:

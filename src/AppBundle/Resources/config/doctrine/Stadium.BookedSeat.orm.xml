@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity repository-class="AppBundle\Repository\Stadium\BookedSeatRepository" name="AppBundle\Entity\Stadium\BookedSeat">
+
+    <unique-constraints>
+      <unique-constraint columns="seat_id,user_id" name="unique_su_idx" />
+    </unique-constraints>
+
+    <id name="id" type="integer" column="id">
+      <generator strategy="AUTO"/>
+    </id>
+
+    <field name="isBooked"       type="boolean"     column="is_booked"      nullable="true"  />
+
+    <many-to-one field="seat" target-entity="AppBundle\Entity\Stadium\Seat">
+      <join-columns>
+        <join-column nullable="false" name="seat_id"/>
+      </join-columns>
+    </many-to-one>
+
+    <many-to-one field="bookedBy" target-entity="AppBundle\Entity\Profile\User">
+      <join-columns>
+        <join-column nullable="false" name="user_id"/>
+      </join-columns>
+    </many-to-one>
+
+  </entity>
+</doctrine-mapping>
